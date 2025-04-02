@@ -5,6 +5,7 @@ let users = require("./auth_users.js").users;
 const public_users = express.Router();
 
 
+
 public_users.post("/register", (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
@@ -22,36 +23,65 @@ public_users.post("/register", (req, res) => {
 
 // Get the book list available in the shop
 public_users.get('/', function (req, res) {
-  return res.send(JSON.stringify(books, null, 4));
+    const listBooks = new Promise((resolve, reject) => {
+        setTimeout(() => {
+            resolve(books);
+        })
+    });
+    
+    listBooks.then((books) => {
+                res.send(JSON.stringify(books, null, 4));
+            });
 });
 
 // Get book details based on ISBN
 public_users.get('/isbn/:isbn',function (req, res) {
     const isbn = req.params.isbn;
 
-    res.send(books[isbn]);
+    const getBook = new Promise((resolve, reject) => {
+        setTimeout(() => {
+            resolve(books[isbn]);
+        })
+    });
+    
+    getBook.then((book) => {
+        res.send(book);
+    });
  });
-  
+
+
 // Get book details based on author
 public_users.get('/author/:author',function (req, res) {
     const author = req.params.author;
 
-    const authorBooks = Object.values(books).filter((book) => {
-        return book.author === author;
+    const listBooks = new Promise((resolve, reject) => {
+        setTimeout(() => {
+            resolve(Object.values(books).filter((book) => {
+                return book.author === author;
+            }));
+        })
     });
-
-    res.send(JSON.stringify(authorBooks, null, 4));
+    
+    listBooks.then((books) => {
+        res.send(JSON.stringify(books, null, 4));
+    });
 });
 
 // Get all books based on title
 public_users.get('/title/:title',function (req, res) {
     const title = req.params.title;
 
-    const titleBooks = Object.values(books).filter((book) => {
-        return book.title === title;
+    const listBooks = new Promise((resolve, reject) => {
+        setTimeout(() => {
+            resolve(Object.values(books).filter((book) => {
+                return book.title === title;
+            }));
+        })
     });
-
-    res.send(JSON.stringify(titleBooks, null, 4));
+    
+    listBooks.then((books) => {
+        res.send(JSON.stringify(books, null, 4));
+    });
 });
 
 //  Get book review
